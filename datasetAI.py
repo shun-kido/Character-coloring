@@ -118,6 +118,7 @@ files = j_file + p_file
 
 #彩度と顔認証で画像厳選
 for i, file in enumerate(files):
+    #print(file)
     filer = cv2.imread(file)
     
     #顔認証 
@@ -125,7 +126,7 @@ for i, file in enumerate(files):
     if faces == ():
         #cv2.imwrite('./out/'+str(i)+'.jpg', filer)
         del files[i]
-        print("del:{}, None".format(str(i),))
+        print("del:{}, None".format(file))
         continue
     
     #彩度

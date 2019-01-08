@@ -23,31 +23,46 @@ def to3d(X):
 def inverse_normalization(X):
     return (X + 1.) / 2.
 
-generator_model = load_model('param.h5')
+def coloring(path, height, width):
+    outpath = './uploads/'
+    
+    generator_model = load_model('param.h5')
+    '''
+    img = glob.glob('./uploads/*.jpg')
+    
+    for img_file in img:
+        img_col = load_img(img_file)
+        height, width = img_col.size
+        imgarray = load_img(img_file, target_size=(128,128))
+    '''
+    imgarray = img_to_array(path)
+    imgarray = normalization(imgarray)
+    imgarray = np.expand_dims(imgarray, axis=0)
 
-img = glob.glob('./out/*.jpg')
-for img_file in img:
-    img_col = load_img(img_file)
-    height, width = img_col.size
-    imgarray = load_img(img_file, target_size=(128,128))
+    color = generator_model.predict(imgarray) 
+    #color = inverse_normalization(color)
+    colored = to3d(color[:5])
+    #print(colored.shape)
+    colored = np.concatenate(colored, axis=1)
+    #print(colored)
+    colored = rgb(colored)
 
-imgarray = img_to_array(imgarray)
-imgarray = normalization(imgarray)
-imgarray = np.expand_dims(imgarray, axis=0)
+    #print(colored)
 
-color = generator_model.predict(imgarray) 
-#color = inverse_normalization(color)
-colored = to3d(color[:5])
-#print(colored.shape)
-colored = np.concatenate(colored, axis=1)
-#print(colored)
-colored = rgb(colored)
-
-print(colored)
-
-pil_img_f = Image.fromarray(np.uint8(colored))
-pil_img_f =pil_img_f.resize((width, height),)
-pil_img_f.save('colored.png',)
+    pil_img_f = Image.fromarray(np.uint8(colored))
+    pil_img_f =pil_img_f.resize((width, height),)
+    pil_img_f.save(outpath+'colored.png',)
+    
+    return outpath+'colored.png'
+    
+if __name__== '__main__':
+    img = glob.glob('./out/*.jpg')
+    
+    for img_file in img:
+        img_col = load_img(img_file)
+        height, width = img_col.size
+        imgarray = load_img(img_file, target_size=(128,128))
+    img = coloring(imgarray, height, width)
 '''
 plt.imshow(colored)
 plt.axis('off')
