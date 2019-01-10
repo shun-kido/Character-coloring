@@ -23,7 +23,7 @@ def to3d(X):
 def inverse_normalization(X):
     return (X + 1.) / 2.
 
-def coloring(path, height, width):
+def coloring(path, hw):
     outpath = './uploads/'
     
     generator_model = load_model('param.h5')
@@ -41,30 +41,32 @@ def coloring(path, height, width):
 
     color = generator_model.predict(imgarray) 
     #color = inverse_normalization(color)
-    colored = to3d(color[:5])
+    #color = to3d(color[:5])
     #print(colored.shape)
-    colored = np.concatenate(colored, axis=1)
+    #color = np.concatenate(color, axis=1)
     #print(colored)
-    colored = rgb(colored)
+    colored = rgb(color)
 
     #print(colored)
 
     pil_img_f = Image.fromarray(np.uint8(colored))
-    pil_img_f =pil_img_f.resize((width, height),)
+    pil_img_f =pil_img_f.resize((round(528/hw), 528),)
     pil_img_f.save(outpath+'colored.png',)
+    #re_colored = test.re_colored(outpath)
     
-    return outpath+'colored.png'
+    #return re_color
     
 if __name__== '__main__':
     img = glob.glob('./out/*.jpg')
     
     for img_file in img:
         img_col = load_img(img_file)
-        height, width = img_col.size
+        width, height = img_col.size
+        hw = height/width
         imgarray = load_img(img_file, target_size=(128,128))
-    img = coloring(imgarray, height, width)
+    img = coloring(imgarray, hw)
 '''
-plt.imshow(colored)
+plt.imshow(img)
 plt.axis('off')
 plt.savefig("colored.png")
 plt.clf()
