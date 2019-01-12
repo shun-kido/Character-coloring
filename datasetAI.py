@@ -13,7 +13,7 @@ def re_size(path):
     #print(name)
     file = cv2.imread(path)
     #学習時のサイズを入力
-    file = cv2.resize(file, (128,128), interpolation = cv2.INTER_AREA)
+    file = cv2.resize(file, (256,256), interpolation = cv2.INTER_AREA)
     cv2.imwrite(inpath+"/org/"+name+".jpg", file)
 
 #線画抽出

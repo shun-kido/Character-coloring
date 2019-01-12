@@ -17,7 +17,7 @@ def download_image(url, dst_path):
             f.write(data)
 
 #range内がDLページ数、40/1page
-for i in range(5):
+for i in range(15):
     #white_backgroundタグの画像を抽出
     url = 'https://safebooru.org/index.php?page=post&s=list&tags=white_background&pid='+str(i*40)
     ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) '\

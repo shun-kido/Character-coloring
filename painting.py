@@ -60,11 +60,11 @@ def coloring(path, height, width, name):
     pil_img_f = Image.fromarray(np.uint8(colored))
     
     if height >= 256 or width >= 256:
-        pil_img_f =pil_img_f.resize((round(width/2), round(height/2)),)
+        pil_img_f =pil_img_f.resize((round(height/2), round(width/2)),)
         pil_img_f.save(outpath+'color_'+name+'.jpg',)
         re_colored = test.re_colored(outpath+'color_'+name+'.jpg')
     else:
-        pil_img_f =pil_img_f.resize((width, height),)
+        pil_img_f =pil_img_f.resize((height, width),)
         pil_img_f.save('upload/color_'+name+'_result.jpg',)
         
         img_url = 'upload/color_'+name+'_result.jpg'

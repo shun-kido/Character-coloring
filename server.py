@@ -41,26 +41,26 @@ def send():
         bin_data = io.BytesIO(f)
         file_bytes = np.asarray(bytearray(bin_data.read()), dtype=np.uint8)
         img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-        # とりあえずサイズは小さくする
+        # 最大サイズは(512,512)
         height, width = img.shape[0], img.shape[1]
         hw = height/width
         if height >= 512 or width >= 512:
-            img = cv2.resize(img, (round(512/hw),512), interpolation = cv2.INTER_AREA)
+            height = round(512/hw)
+            width = 512
+            img = cv2.resize(img, (height,width), interpolation = cv2.INTER_AREA)
         
         # サイズだけ変えたものも保存する
         raw_img_url = os.path.join(app.config['UPLOAD_FOLDER'], 'raw_'+filename)
         cv2.imwrite(raw_img_url+'.jpg', img)
         
-        imgarray = load_img(raw_img_url+'.jpg', target_size=(128,128))
+        imgarray = load_img(raw_img_url+'.jpg', target_size=(256,256))
 
         # なにがしかの加工
         painting.coloring(imgarray, height, width, filename)
         color_img_url = os.path.join(app.config['UPLOAD_FOLDER'], 'color_'+filename)
-        # 加工したものを保存する
-        '''
-        color_img_url = os.path.join(app.config['UPLOAD_FOLDER'], 'color_'+filename)
-        cv2.imwrite(gray_img_url, color_img)
-        '''
+        
+        del imgarray
+        
         return render_template('index.html', raw_img_url=raw_img_url+'.jpg', color_img_url=color_img_url+'_result.jpg')
 
     else:
