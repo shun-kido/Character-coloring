@@ -42,7 +42,8 @@ def make_hint(true, mask):
     height = hint.shape[0]
     width = hint.shape[1]
 
-    num = np.random.randint(0,4)  #ヒントの数（０～３）
+    num = np.random.randint(0,4)#ヒントの数（０～３）
+    num = 0
     #print(num)
     for l in range(num):
         hint_col = []
@@ -154,7 +155,7 @@ for file in files:
 true_files = glob.glob(inpath+'/org/*.jpg')
 for file in true_files:
     mask_file = make_contour_image(file)
-    #mask_file = make_hint(file, mask_file)
+    mask_file = make_hint(file, mask_file)
     
 mask_files = glob.glob(inpath+'/mask/*.jpg')
 

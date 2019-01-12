@@ -20,7 +20,7 @@ import modelAI
 
 datasetpath = './output2/datasetimages.hdf5'
 modelpath = './param.h5'
-patch_size = 64  #分割
+patch_size = 32  #分割
 batch_size = 5
 epoch = 200
 
