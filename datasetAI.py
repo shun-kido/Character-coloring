@@ -154,7 +154,7 @@ for file in files:
 true_files = glob.glob(inpath+'/org/*.jpg')
 for file in true_files:
     mask_file = make_contour_image(file)
-    mask_file = make_hint(file, mask_file)
+    #mask_file = make_hint(file, mask_file)
     
 mask_files = glob.glob(inpath+'/mask/*.jpg')
 
