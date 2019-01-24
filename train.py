@@ -37,7 +37,7 @@ def load_data(datasetpath):
         X_full_val = normalization(X_full_val)
         X_sketch_val = hf["val_data_gen"][:].astype(np.float32)
         X_sketch_val = normalization(X_sketch_val)
-        return X_full_train, X_sketch_train, X_full_val, X_sketch_val 
+        return X_full_train, X_sketch_train, X_full_val, X_sketch_val
 
 def l1_loss(y_true, y_pred):
     return K.sum(K.abs(y_pred - y_true), axis=-1)
@@ -71,7 +71,7 @@ def plot_generated_batch(X_proc, X_raw, generator_model, batch_size, suffix):
     plt.savefig("current_batch_"+suffix+".png")
     plt.clf()
     plt.close()
-    
+
 
 def extract_patches(X, patch_size):
     list_X = []
@@ -175,7 +175,7 @@ def train():
 
         print("")
         print('Epoch %s/%s, Time: %s' % (e + 1, epoch, time.time() - starttime))
-         
+
     generator_model.save(modelpath)
 
 #pre_generator = train()
@@ -200,7 +200,7 @@ for img_file in img:
 
 imgarray_4 = normalization(imgarray_4)
 imgarray_4 = np.expand_dims(imgarray, axis=0)
-color = pre_generator.predict(imgarray_4) 
+color = pre_generator.predict(imgarray_4)
 colored = inverse_normalization(color)
 colored = to3d(colored[:5])
 colored = np.concatenate(colored, axis=1)

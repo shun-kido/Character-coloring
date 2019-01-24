@@ -17,7 +17,7 @@ def download_image(url, dst_path):
             f.write(data)
 
 #range内がDLページ数、40/1page
-for i in range(15):
+for i in range(20,50):
     #white_backgroundタグの画像を抽出
     url = 'https://safebooru.org/index.php?page=post&s=list&tags=white_background&pid='+str(i*40)
     ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) '\
@@ -34,7 +34,7 @@ for i in range(15):
     for img in img_list:
         url_list.append(img.get('src'))
 
-    download_dir = './safebooru'
+    download_dir = './dataset/safebooru'
     sleep_time_sec = 1
 
     for i, url in enumerate(url_list):
@@ -45,4 +45,3 @@ for i in range(15):
         time.sleep(sleep_time_sec)
         print(url, dst_path)
         download_image('https:'+url[0], dst_path)
-            
