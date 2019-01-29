@@ -14,15 +14,16 @@ from keras.models import model_from_json
 import keras.backend as K
 from keras.utils import generic_utils
 from keras.optimizers import Adam, SGD
+from keras.models import load_model
 from keras.preprocessing.image import load_img, img_to_array, array_to_img, save_img
 
 import modelAI
 
-datasetpath = './output2/datasetimages.hdf5'
+datasetpath = './dataset/output/datasetimages.hdf5'
 modelpath = './param.h5'
 patch_size = 32  #分割
 batch_size = 5
-epoch = 200
+epoch = 1
 
 def normalization(X):
     return X / 127.5 - 1
@@ -176,7 +177,7 @@ def train():
         print("")
         print('Epoch %s/%s, Time: %s' % (e + 1, epoch, time.time() - starttime))
 
-    generator_model.save(modelpath)
+    #generator_model.save(modelpath)
 
 #pre_generator = train()
 if __name__ == "__main__":
@@ -191,15 +192,16 @@ print(X_gen)
 plot_generated_batch(X_gen_target, X_gen, pre_generator, batch_size, "validation")
 '''
 
-'''
+
 #print(pre_generator)
-img = glob.glob('./out/*.jpg')
+img = glob.glob('./upload/*.jpg')
+pre_generator = load_model('param.h5')
 for img_file in img:
-    img_col = load_img(img_file)
+    img_col = load_img(img_file, target_size=(128,128))
     imgarray = img_to_array(img_col)
 
-imgarray_4 = normalization(imgarray_4)
-imgarray_4 = np.expand_dims(imgarray, axis=0)
+imgarray_4 = normalization(imgarray)
+imgarray_4 = np.expand_dims(imgarray_4, axis=0)
 color = pre_generator.predict(imgarray_4)
 colored = inverse_normalization(color)
 colored = to3d(colored[:5])
@@ -210,4 +212,3 @@ plt.axis('off')
 plt.savefig("colored.png")
 plt.clf()
 plt.close()
-'''

@@ -11,7 +11,7 @@ import tensorflow as tf
 import test
 #import waifu2x
 
-generator_model = load_model('param2.h5')
+generator_model = load_model('param.h5')
 graph = tf.get_default_graph()
 
 def normalization(X):
@@ -62,14 +62,14 @@ def coloring(path, height, width, name):
 
     if height >= 256 or width >= 256:
         pil_img_f =pil_img_f.resize((round(height/2), round(width/2)),)
-        pil_img_f.save(outpath+'color_'+name+'.jpg',)
-        re_colored = test.re_colored(outpath+'color_'+name+'.jpg')
+        pil_img_f.save(outpath+'color_'+name+'.png',)
+        re_colored = test.re_colored(outpath+'color_'+name+'.png')
         #re_colored = waifu2x.waifu2(outpath+'color_'+name+'.jpg')
     else:
         pil_img_f =pil_img_f.resize((height, width),)
-        pil_img_f.save('upload/color_'+name+'_result.jpg',)
+        pil_img_f.save('upload/color_'+name+'_result.png',)
 
-        img_url = 'upload/color_'+name+'_result.jpg'
+        img_url = 'upload/color_'+name+'_result.png'
     #pil_img_f.save(outpath+'color_'+name+'.jpg',)
     #print(outpath+'color_'+name+'.jpg')
     #re_colored = test.re_colored(outpath+'color_'+name+'.jpg')
@@ -84,7 +84,7 @@ if __name__== '__main__':
         width, height = img_col.size
         #print(width, height)
         imgarray = load_img(img_file, target_size=(128,128))
-    img = coloring(imgarray, height, width, "a")
+    img = coloring(imgarray, width, height,  "a")
 '''
 plt.imshow(img)
 plt.axis('off')

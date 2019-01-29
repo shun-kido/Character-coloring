@@ -13,23 +13,50 @@ def re_size(path):
     #print(name)
     file = cv2.imread(path)
     #学習時のサイズを入力
-    file = cv2.resize(file, (256,256), interpolation = cv2.INTER_AREA)
+    file = cv2.resize(file, (128,128), interpolation = cv2.INTER_AREA)
     cv2.imwrite(inpath+"/org/"+name, file)
 
 #線画抽出
-def make_contour_image(path):
+def make_contour_image(path, s):
+    '''
     neiborhood24 = np.array([[1, 1, 1, 1, 1],
                              [1, 1, 1, 1, 1],
                              [1, 1, 1, 1, 1],
                              [1, 1, 1, 1, 1],
                              [1, 1, 1, 1, 1]],
                              np.uint8)
+    '''
 
+    neiborhood8 = np.array([[1, 1, 1],
+                            [1, 1, 1],
+                            [1, 1, 1]],
+                            np.uint8)
+
+    neiborhood4 = np.array([[0, 1, 0],
+                            [1, 1, 1],
+                            [0, 1, 0]],
+                            np.uint8)
     #線画を抽出
     gray = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-    dilated = cv2.dilate(gray, neiborhood24, iterations=1)
+    dilated = cv2.dilate(gray, neiborhood4, iterations=1)
     diff = cv2.absdiff(dilated, gray)
     contour = 255 - diff
+
+    if s < 60:
+        bl = 235
+    elif s < 85:
+        bl = 220
+    else:
+        bl = 210
+
+    for i, x in enumerate(contour):
+        for j, y in enumerate(x):
+            if y <= bl:
+                contour[i][j] = 140
+            else:
+                contour[i][j] = 255
+
+    #print(contour)
     #name = path.lstrip(inpath+"/org/")
     #cv2.imwrite(inpath+"/mask/"+name+".jpg", contour)
     return contour
@@ -42,8 +69,8 @@ def make_hint(true, mask):
     height = hint.shape[0]
     width = hint.shape[1]
 
-    num = np.random.randint(0,5)#ヒントの数（０～３）
-    #num = 0
+    num = np.random.randint(5, 10)#ヒントの数（０～３）
+    num = 0
     #print(num)
     for l in range(num):
         hint_col = []
@@ -91,14 +118,20 @@ def detect(filename, cascade_file = "./lbpcascade_animeface.xml"):
         raise RuntimeError("%s: not found" % cascade_file)
 
     cascade = cv2.CascadeClassifier(cascade_file)
-    gray = cv2.cvtColor(filename, cv2.COLOR_BGR2GRAY)
-    gray = cv2.equalizeHist(gray)
 
-    faces = cascade.detectMultiScale(gray,
+    try:
+        gray = cv2.cvtColor(filename, cv2.COLOR_BGR2GRAY)
+        gray = cv2.equalizeHist(gray)
+
+        faces = cascade.detectMultiScale(gray,
                                      # detector options
                                      scaleFactor = 1.1,
                                      minNeighbors = 2,
                                      minSize = (16, 16))
+
+    except:
+        faces = None
+
     return faces
 
 
@@ -112,13 +145,15 @@ masks = []
 
 print('original img')
 j_file = glob.glob(datapath+"/*.jpg")
-p_file = glob.glob(datapath+"/*.png")
-files = j_file + p_file
+#p_file = glob.glob(datapath+"/*.png")
+
+files = j_file
 
 #print(files)
 
 #彩度と顔認証で画像厳選
 del_num = []
+all_s = []
 for i, file in enumerate(files):
     #print(file)
     filer = cv2.imread(file)
@@ -139,12 +174,17 @@ for i, file in enumerate(files):
     h = hsv.shape[0]
     w = hsv.shape[1]//2
     hsv_s = []
-    for k in range(5):
-        for j in range(h):
-            s = hsv[j, w+5, 1]
-            hsv_s.append(s)
 
-    ave_s = mean(hsv_s)
+    try:
+        for k in range(5):
+            for j in range(h):
+                s = hsv[j, w+5, 1]
+                hsv_s.append(s)
+
+        ave_s = mean(hsv_s)
+
+    except:
+        ave_s = 0
 
     #彩度<18はデータセットから除外
     if ave_s < 18:
@@ -154,6 +194,7 @@ for i, file in enumerate(files):
         print("del:{},{}".format(file, ave_s))
         continue
 
+    all_s.append(ave_s)
     print("{},{}".format(file, ave_s))
 #print(len(files))
 #print(del_num)
@@ -167,8 +208,8 @@ for file in files:
     re_file = re_size(file)
 
 true_files = glob.glob(inpath+'/org/*.jpg')
-for file in true_files:
-    mask_file = make_contour_image(file)
+for i, file in enumerate(true_files):
+    mask_file = make_contour_image(file, all_s[i])
     mask_file = make_hint(file, mask_file)
 
 mask_files = glob.glob(inpath+'/mask/*.jpg')
