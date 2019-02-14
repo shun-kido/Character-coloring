@@ -4,12 +4,10 @@ import cv2
 from PIL import Image
 import matplotlib.pylab as plt
 import h5py
-#import keras.backend as K
 from keras.models import load_model
 from keras.preprocessing.image import load_img, img_to_array, array_to_img, save_img
 import tensorflow as tf
 import test
-#import waifu2x
 
 generator_model = load_model('param.h5')
 graph = tf.get_default_graph()
@@ -32,15 +30,6 @@ def inverse_normalization(X):
 def coloring(path, height, width, name):
     outpath = './raisr/test/'
 
-   #generator_model = load_model('param.h5')
-    '''
-    img = glob.glob('./uploads/*.jpg')
-
-    for img_file in img:
-        img_col = load_img(img_file)
-        height, width = img_col.size
-        imgarray = load_img(img_file, target_size=(128,128))
-    '''
     imgarray = img_to_array(path)
     imgarray = normalization(imgarray)
     imgarray = np.expand_dims(imgarray, axis=0)
@@ -49,46 +38,38 @@ def coloring(path, height, width, name):
     with graph.as_default():
         color = generator_model.predict(imgarray)
 
-    #color = inverse_normalization(color)
-    color = to3d(color[:5])
-    #print(colored.shape)
-    color = np.concatenate(color, axis=1)
-    #print(colored)
-    colored = rgb(color)
 
-    #print(colored)
+    color = to3d(color[:5])
+    color = np.concatenate(color, axis=1)
+    colored = rgb(color)
 
     pil_img_f = Image.fromarray(np.uint8(colored))
 
+    ''' ///大きいサイズにリサイズする場合///
     if height >= 256 or width >= 256:
         pil_img_f =pil_img_f.resize((round(height/2), round(width/2)),)
         pil_img_f.save(outpath+'color_'+name+'.png',)
         re_colored = test.re_colored(outpath+'color_'+name+'.png')
-        #re_colored = waifu2x.waifu2(outpath+'color_'+name+'.jpg')
     else:
         pil_img_f =pil_img_f.resize((height, width),)
         pil_img_f.save('upload/color_'+name+'_result.png',)
-
         img_url = 'upload/color_'+name+'_result.png'
-    #pil_img_f.save(outpath+'color_'+name+'.jpg',)
-    #print(outpath+'color_'+name+'.jpg')
-    #re_colored = test.re_colored(outpath+'color_'+name+'.jpg')
+    '''
 
-    #return img_url
+    pil_img_f =pil_img_f.resize((height, width),)
+    pil_img_f.save('upload/color_'+name+'_result.png',)
+    img_url = 'upload/color_'+name+'_result.png'
+
 
 if __name__== '__main__':
     img = glob.glob('./upload/*.jpg')
+    img_p = glob.glob('./upload/*.png')
+    img.extend(img_p)
 
     for img_file in img:
         img_col = load_img(img_file)
         width, height = img_col.size
         #print(width, height)
         imgarray = load_img(img_file, target_size=(128,128))
-    img = coloring(imgarray, width, height,  "a")
-'''
-plt.imshow(img)
-plt.axis('off')
-plt.savefig("colored.png")
-plt.clf()
-plt.close()
-'''
+        name = img_file.lstrip("./upload/")
+        img = coloring(imgarray, width, height, name)

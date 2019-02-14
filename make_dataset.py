@@ -18,14 +18,14 @@ def re_size(path):
 
 #線画抽出
 def make_contour_image(path, s):
-    '''
+
     neiborhood24 = np.array([[1, 1, 1, 1, 1],
                              [1, 1, 1, 1, 1],
                              [1, 1, 1, 1, 1],
                              [1, 1, 1, 1, 1],
                              [1, 1, 1, 1, 1]],
                              np.uint8)
-    '''
+
 
     neiborhood8 = np.array([[1, 1, 1],
                             [1, 1, 1],
@@ -36,11 +36,13 @@ def make_contour_image(path, s):
                             [1, 1, 1],
                             [0, 1, 0]],
                             np.uint8)
+
     #線画を抽出
     gray = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     dilated = cv2.dilate(gray, neiborhood4, iterations=1)
     diff = cv2.absdiff(dilated, gray)
     contour = 255 - diff
+    #print(contour.shape)
 
     if s < 60:
         bl = 235
@@ -48,7 +50,6 @@ def make_contour_image(path, s):
         bl = 220
     else:
         bl = 210
-
     for i, x in enumerate(contour):
         for j, y in enumerate(x):
             if y <= bl:
@@ -56,9 +57,10 @@ def make_contour_image(path, s):
             else:
                 contour[i][j] = 255
 
-    #print(contour)
-    #name = path.lstrip(inpath+"/org/")
-    #cv2.imwrite(inpath+"/mask/"+name+".jpg", contour)
+    ''' ///ヒントなしで保存する場合///
+    name = path.lstrip(inpath+"/org/")
+    cv2.imwrite(inpath+"/mask/"+name+".jpg", contour)
+    '''
     return contour
 
 def make_hint(true, mask):
@@ -69,9 +71,8 @@ def make_hint(true, mask):
     height = hint.shape[0]
     width = hint.shape[1]
 
-    num = np.random.randint(5, 10)#ヒントの数（０～３）
+    num = np.random.randint(5, 15)#ヒントの数（0～10）
     num = 0
-    #print(num)
     for l in range(num):
         hint_col = []
         t = np.random.randint(0 ,3)
@@ -85,28 +86,28 @@ def make_hint(true, mask):
             deep = 1
             wide = 1
 
-        x = (np.random.randint(0, width-16))
-        y = (np.random.randint(0, height-16))
+        x = (np.random.randint(0, width-21))
+        y = (np.random.randint(0, height-21))
 
-        for i in range(15):
+        for i in range(20):
             if deep == 1:
-                for j in range(3):
+                for j in range(2):
                     [b, g, r] = hint[y+(i*deep), x+(i*wide)+j]
                     hint_col.append([b, g, r])
             else:
-                for j in range(3):
+                for j in range(2):
                     [b, g, r] = hint[y+(i*deep)+j, x+(i*wide)]
                     hint_col.append([b, g, r])
 
         #ヒントを与える
         m = 0
-        for i in range(15):
+        for i in range(20):
             if deep == 1:
-                for j in range(3):
+                for j in range(2):
                     masked[y+(i*deep), x+(i*wide)+j] = hint_col[m][0], hint_col[m][1], hint_col[m][2]
                     m += 1
             else:
-                for j in range(3):
+                for j in range(2):
                     masked[y+(i*deep)+j, x+(i*wide)] = hint_col[m][0], hint_col[m][1], hint_col[m][2]
                     m += 1
     name = true.lstrip(inpath+"/org/")
@@ -149,8 +150,6 @@ j_file = glob.glob(datapath+"/*.jpg")
 
 files = j_file
 
-#print(files)
-
 #彩度と顔認証で画像厳選
 del_num = []
 all_s = []
@@ -163,12 +162,11 @@ for i, file in enumerate(files):
     faces = detect(filer)
     if faces == ():
         #cv2.imwrite('./out/'+name+'.jpg', filer)
-        #del files[i]
         del_num.append(i)
         print("del:{}, None".format(file))
         continue
 
-    #彩度
+    #彩度取得
     hsv = cv2.cvtColor(filer, cv2.COLOR_BGR2HSV)
 
     h = hsv.shape[0]
@@ -189,15 +187,14 @@ for i, file in enumerate(files):
     #彩度<18はデータセットから除外
     if ave_s < 18:
         cv2.imwrite('./out/'+name+'.jpg', filer)
-        #del files[i]
         del_num.append(i)
         print("del:{},{}".format(file, ave_s))
         continue
 
     all_s.append(ave_s)
     print("{},{}".format(file, ave_s))
-#print(len(files))
-#print(del_num)
+
+
 for i in del_num:
     files[i] = 'N'
 
@@ -224,7 +221,6 @@ for imgfile in true_files:
     except:
         continue
 
-print('mask img')
 for imgfile in mask_files:
     try:
         #print(imgfile)
@@ -235,6 +231,8 @@ for imgfile in mask_files:
     except:
         continue
 
+#orgs = orgs[:28000]
+#masks = masks[:28000]
 perm = np.random.permutation(len(orgs))
 orgs = np.array(orgs)[perm]
 masks = np.array(masks)[perm]
@@ -243,13 +241,7 @@ imgs = orgs[:threshold]
 gimgs = masks[:threshold]
 vimgs = orgs[threshold:]
 vgimgs = masks[threshold:]
-'''
-print('shapes')
-print('org imgs  : ', imgs.shape)
-print('mask imgs : ', gimgs.shape)
-print('test org  : ', vimgs.shape)
-print('test tset : ', vgimgs.shape)
-'''
+
 outh5 = h5py.File(outpath+'/datasetimages.hdf5', 'w')
 outh5.create_dataset('train_data_raw', data=imgs)
 outh5.create_dataset('train_data_gen', data=gimgs)

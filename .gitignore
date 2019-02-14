@@ -127,3 +127,4 @@ safebooru.py
 *.html
 残骸/gradient_penalty.py
 *.h5
+safebooru.py
