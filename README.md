@@ -1,2 +1,2 @@
 # Character-coloring
-pix2pixを使ってどこまで線画を着色できるか
+機械学習初心者がpix2pixを使ってどこまで線画を着色できるか
