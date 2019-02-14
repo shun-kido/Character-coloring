@@ -117,14 +117,11 @@ dmypy.json
 *.png
 *.hdf5
 raisr/train/README.md
-raisr/train/README.md
 untitled
 app.py
 *.h5
-*.h5
-safebooru.py
-safebooru.py
-*.html
 残骸/gradient_penalty.py
 *.h5
 safebooru.py
+upload/*
+!.gitkeep
