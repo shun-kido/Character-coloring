@@ -68,9 +68,7 @@
       document.getElementById("files").addEventListener("change", function (e) {
           var file = e.target.files;
           var reader = new FileReader();
-          //ファイルが複数読み込まれた際に、1つめを選択
           reader.readAsDataURL(file[0]);
-          //ファイルが読み込めたら
           reader.onload = function () {
               var src = reader.result;
               drawCanvas(src);
@@ -98,13 +96,12 @@
                 }
                 $(".hint_work").css("display", "block")
                 $("#color-palette").css("display", "block")
-                $("#canvas").attr("width",im_w);   //←これだったらおｋだった。　orz
+                $("#canvas").attr("width",im_w);
                 $("#canvas").attr("height",im_h);
                 //context.drawImage(canvas.width, canvas.height);
               };
 
                 $("#preview").empty();
-                // .prevewの領域の中にロードした画像を表示するimageタグを追加
                 $("#preview").append('<img src="" id="pre"></img>');
                 $("#pre").attr({src: image.src});
             }
@@ -117,7 +114,6 @@
       const lastPosition = { x: null, y: null };
       let isDrag = false;
 
-      // 現在の線の色を保持する変数(デフォルトは黒(#000000)とする)
       let currentColor = '#000000';
 
       function draw(x, y) {
@@ -162,23 +158,13 @@
         });
       }
 
-      // カラーパレットの設置を行う
       function initColorPalette() {
         const joe = colorjoe.rgb('color-palette', currentColor);
-
-        // 'done'イベントは、カラーパレットから色を選択した時に呼ばれるイベント
-        // ドキュメント: https://github.com/bebraw/colorjoe#event-handling
         joe.on('done', color => {
-          // コールバック関数の引数からcolorオブジェクトを受け取り、
-          // このcolorオブジェクト経由で選択した色情報を取得する
-
-          // color.hex()を実行すると '#FF0000' のような形式で色情報を16進数の形式で受け取れる
-          // draw関数の手前で定義されている、線の色を保持する変数に代入して色情報を変更する
           currentColor = color.hex();
         });
       }
       initEventHandler();
-      // カラーパレット情報を初期化する
       initColorPalette();
     }
   </script>
