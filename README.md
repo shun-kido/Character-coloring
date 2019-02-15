@@ -7,7 +7,7 @@
 ・Python3  
 ・tensorflow(-gpu)+keras  
 ・Numpy  
-・openCV
+・openCV  
 (・flask)
 
 # Dataset
