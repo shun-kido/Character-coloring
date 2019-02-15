@@ -1,6 +1,7 @@
 # Character-coloring
 機械学習初心者がpix2pixを使ってどこまで線画を着色できるか  
 一応web上で遊べるのを目指す
+![fireshot capture 9 - coloringai - http___127 0 0 1_5000_send](https://user-images.githubusercontent.com/45202725/52843345-3567a480-3145-11e9-88a7-a82b94f1d176.png)
 
 # Requirements
 ・Python3  
@@ -17,4 +18,5 @@
 ・抽出した線画に元イラストの部分的な色情報をヒント(5~15個)を与える  
 
 # example
-![fireshot capture 10 - coloringai - http___127 0 0 1_5000_send](https://user-images.githubusercontent.com/45202725/52842716-4fa08300-3143-11e9-92e5-f1c04a8d6319.png)
+![fireshot capture 10 - coloringai - http___127 0 0 1_5000_send](https://user-images.githubusercontent.com/45202725/52842716-4fa08300-3143-11e9-92e5-f1c04a8d6319.png)  
+↓　web上でヒントを描くことができます　　
