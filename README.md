@@ -18,6 +18,7 @@
 ・抽出した線画に元イラストの部分的な色情報をヒント(5~15個)を与える  
 
 # example
+画像を選択するとこのような画面になります
 ![fireshot capture 10 - coloringai - http___127 0 0 1_5000_send](https://user-images.githubusercontent.com/45202725/52842716-4fa08300-3143-11e9-92e5-f1c04a8d6319.png)  
 ↓　web上でヒントを描くことができます　　
 ![fireshot capture 8 - coloringai - http___127 0 0 1_5000_](https://user-images.githubusercontent.com/45202725/52843572-dd7d6d80-3145-11e9-9230-170921214638.png)　　
