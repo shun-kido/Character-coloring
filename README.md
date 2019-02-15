@@ -3,7 +3,7 @@
 一応web上で遊べるのを目指す
 
 # Requirements
-・Python3
-・tensorflow(-gpu)+keras
-・Numpy
-・openCV
+・Python3  
+・tensorflow(-gpu)+keras  
+・Numpy  
+・openCV  
