@@ -1,7 +1,6 @@
 # Character-coloring
-機械学習初心者がpix2pixを使ってどこまで線画を着色できるか
+機械学習初心者がpix2pixを使ってどこまで線画を着色できるか  
 一応web上で遊べるのを目指す
-![fireshot capture 10 - coloringai - http___127 0 0 1_5000_send](https://user-images.githubusercontent.com/45202725/52842716-4fa08300-3143-11e9-92e5-f1c04a8d6319.png)
 
 # Requirements
 ・Python3  
