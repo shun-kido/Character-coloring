@@ -1,6 +1,4 @@
 # Character-coloring
-専門知識なしがpix2pixを使ってどこまで線画を着色できるか  
-一応web上で遊べるのを目指す
 ![fireshot capture 9 - coloringai - http___127 0 0 1_5000_seznd](https://user-images.githubusercontent.com/45202725/52843549-c9d20700-3145-11e9-88b8-19417b8b5f70.png)
 
 # Requirements
@@ -23,7 +21,6 @@ pix2pixを使って学習
 model:https://github.com/tommyfms2/pix2pix-keras-byt
 
 # example
-server.pyを実行するとweb上でヒントを付け着色してくれるサイトが動きます  
 画像を選択するとこのような画面になります  
 ![fireshot capture 10 - coloringai - http___127 0 0 1_5000_send](https://user-images.githubusercontent.com/45202725/52842716-4fa08300-3143-11e9-92e5-f1c04a8d6319.png)  
 ↓　web上でヒントを描くことができます　　
